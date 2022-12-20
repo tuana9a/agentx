@@ -1,4 +1,4 @@
-from agentx.utils.bash_utils import run
+from agentx.utils.bash import run
 
 
 class SystemctlUtils():

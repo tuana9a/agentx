@@ -7,4 +7,6 @@ setuptools.setup(
     author="Tuan Nguyen Minh",
     author_email="tuana9a@gmail.com",
     entry_points={"console_scripts": ["agentx=agentx.cmd.daemon:main"]},
-    install_requires=["python-dotenv==0.19.2"])
+    install_requires=[
+        "python-dotenv>=0.19.2", "crossplane>=0.5.8", "pydantic>=1.10.2"
+    ])

@@ -17,6 +17,6 @@ interval_check_process_stopped_in_seconds = 5
 default_stop_container_timeout_in_seconds = 3 * 60
 
 # nginx
-default_nginx_config_path = "/etc/nginx/conf.d/agentx.conf"
+default_nginx_config_path = "/etc/nginx/nginx.conf"
 agentx_config_notation = "###agentx"
 default_nginx_conf_delimiter = ";"

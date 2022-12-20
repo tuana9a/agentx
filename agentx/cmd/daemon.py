@@ -1,4 +1,4 @@
-from agentx.utils.thread_pool import default_thread_pool
+from agentx.utils.thread import default_thread_pool
 
 # TODO: rabbitmq
 

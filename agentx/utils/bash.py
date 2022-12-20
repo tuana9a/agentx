@@ -2,7 +2,7 @@ import time
 import subprocess
 
 from agentx.configs import cfg
-from agentx.utils.thread_pool import default_thread_pool
+from agentx.utils.thread import default_thread_pool
 
 
 def _kill_after_timeout(process: subprocess.Popen, timeout):
