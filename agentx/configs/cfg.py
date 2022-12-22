@@ -5,7 +5,7 @@ import uuid
 cpu_count = multiprocessing.cpu_count()
 max_thread_pool_size = 8
 min_thread_pool_size = 2
-default_thread_pool_size = min(max(cpu_count, 1), 8)
+default_thread_pool_size = min(max(cpu_count, min_thread_pool_size), 8)
 
 # bash
 default_process_timeout_in_seconds = 30

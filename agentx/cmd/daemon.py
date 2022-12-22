@@ -17,6 +17,7 @@ from agentx.utils.thread import default_thread_pool
 
 def main():
     agentx = Agentx(cfg.agentx_id)
+    logging.info(f'agentx_id {cfg.agentx_id}')
 
     def callback(ch, method, properties, body):
         try:
@@ -42,24 +43,15 @@ def main():
                     "agentx_id": cfg.agentx_id,
                     "configs": list(map(lambda x: x.dict(), agentx.configs))
                 }
+
                 channel.basic_publish(exchange=exchange_name.current_configs,
                                       routing_key="",
                                       body=json.dumps(payload))
-                time.sleep(3)
-        except Exception as e:
-            logging.error(traceback.format_exc())
-
-    def send_current_configs_if_build():
-        conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
-        channel = conn.channel()
-        channel.exchange_declare(exchange_name.current_configs_if_build,
-                                 exchange_type="fanout")
-        try:
-            while not stop:
                 payload = {
                     "agentx_id": cfg.agentx_id,
                     "configs": agentx.get_current_configs_if_build()
                 }
+
                 channel.basic_publish(
                     exchange=exchange_name.current_configs_if_build,
                     routing_key="",
@@ -69,7 +61,6 @@ def main():
             logging.error(traceback.format_exc())
 
     default_thread_pool.submit(fn=send_current_configs)
-    default_thread_pool.submit(fn=send_current_configs_if_build)
 
     try:
         conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
