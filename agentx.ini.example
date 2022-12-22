@@ -1,0 +1,4 @@
+[default]
+agentx_id=any-string-id
+nginx_config_path=/etc/nginx/nginx.conf
+transport_url=amqps://username:password@rabbitmq.example.com/vhost

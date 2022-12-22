@@ -5,18 +5,37 @@ import json
 import time
 import traceback
 import logging
-
-logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
-                    level=logging.INFO)
+import argparse
+import configparser
 
 from agentx.agent import Agentx
 from agentx.configs import cfg
 from agentx.configs import exchange_name
 from agentx.utils.thread import default_thread_pool
 
+logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
+                    level=logging.INFO)
+
+parser = argparse.ArgumentParser(prog="agentx")
+
+parser.add_argument("-c",
+                    "--config",
+                    help="Agentx config path",
+                    required=True,
+                    type=str)
+
 
 def main():
-    agentx = Agentx(cfg.agentx_id)
+    args = parser.parse_args()
+    config_parser = configparser.ConfigParser()
+    config_parser.read(args.config)
+
+    for section in config_parser.sections():
+        cfg.agentx_id = config_parser[section]["agentx_id"]
+        cfg.nginx_config_path = config_parser[section]["nginx_config_path"]
+        cfg.transport_url = config_parser[section]["transport_url"]
+
+    agentx = Agentx(cfg.agentx_id, cfg.nginx_config_path)
     logging.info(f'agentx_id {cfg.agentx_id}')
 
     def callback(ch, method, properties, body):

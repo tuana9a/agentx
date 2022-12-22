@@ -1,11 +1,8 @@
 import uuid
 import crossplane
 
-from typing import List
-from agentx.configs import cfg
 from agentx.models.crossplane import ParsedEntry
 from typing import Optional, List
-from agentx.configs import cfg as cfg
 from agentx.utils.systemctl import SystemctlUtils
 from agentx.models.nginx import ReverseProxyHTTP
 from agentx.models.nginx import ReverseProxyHTTPS
@@ -21,15 +18,12 @@ class Agentx():
     configs: List[ParsedEntry]
     systemctl: SystemctlUtils
 
-    def __init__(self, id: str, conf_path=cfg.default_nginx_config_path):
+    def __init__(self, id: str, conf_path: str):
         self.id = id
         self.systemctl = SystemctlUtils("nginx")
         self.conf_path = conf_path
         self.configs = []
-        for x in crossplane.parse(conf_path)["config"]:
-            e = ParsedEntry(**x)
-            if (is_managed_config(e.file)):
-                self.configs.append(e)
+        self.reload_config()
 
     def add_reverse_proxy_http(self,
                                file: str,
@@ -57,7 +51,7 @@ class Agentx():
         target_blocks = target_config.parsed
 
         for i in which_block:
-            directive_entry = target_blocks[i]
+            directive_entry = target_blocks[i]  # type: ignore
             if (not directive_entry):
                 return
             target_blocks = directive_entry.block
@@ -137,6 +131,13 @@ class Agentx():
 
     def reload(self, **kwargs):
         self.systemctl.reload()
+
+    def reload_config(self, **kwargs):
+        self.configs = []
+        for x in crossplane.parse(self.conf_path)["config"]:
+            e = ParsedEntry(**x)
+            if (is_managed_config(e.file)):
+                self.configs.append(e)
 
     def save_config(self, file: str, **kwargs):
         for conf in self.configs:
