@@ -1,5 +1,7 @@
 import time
 import subprocess
+import traceback
+import logging
 
 from agentx.configs import cfg
 from agentx.utils.thread import default_thread_pool
@@ -22,7 +24,7 @@ def _kill_after_timeout(process: subprocess.Popen, timeout):
             return
         # else do nothing
     except Exception as err:
-        print(err)
+        logging.error(traceback.format_exc())
 
     process.kill()
 

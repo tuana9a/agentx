@@ -7,14 +7,14 @@ from typing import List, Optional
 
 
 class DirectiveEntry(BaseModel):
-    directive: Optional[str]
+    directive: str
     line: Optional[int] = None
     args: Optional[List[str]] = []
     block: Optional[List[DirectiveEntry]] = None
 
 
 class ParsedEntry(BaseModel):
-    file: Optional[str] = None
+    file: str
     status: Optional[str] = None
     errors: Optional[List] = []
     parsed: List[DirectiveEntry] = []
