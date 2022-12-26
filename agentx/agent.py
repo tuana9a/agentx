@@ -51,7 +51,7 @@ class Agentx():
         target_blocks = target_config.parsed
 
         for i in which_block:
-            directive_entry = target_blocks[i]  # type: ignore
+            directive_entry = target_blocks[i]
             if (not directive_entry):
                 return
             target_blocks = directive_entry.block
@@ -130,7 +130,14 @@ class Agentx():
             }, self.configs))
 
     def reload(self, **kwargs):
+        # deprecated
         self.systemctl.reload()
+
+    def reload_server(self, **kwargs):
+        self.systemctl.reload()
+
+    def restart_server(self, **kwargs):
+        self.systemctl.restart()
 
     def reload_config(self, **kwargs):
         self.configs = []

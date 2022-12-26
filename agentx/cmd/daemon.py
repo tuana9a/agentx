@@ -10,8 +10,8 @@ import configparser
 
 from agentx.agent import Agentx
 from agentx.configs import cfg
-from agentx.configs import exchange_name
-from agentx.utils.thread import default_thread_pool
+from agentx.configs import exchname
+from agentx.utils.thread import thread_pool
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
                     level=logging.INFO)
@@ -54,7 +54,7 @@ def main():
     def send_current_configs():
         conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
         channel = conn.channel()
-        channel.exchange_declare(exchange_name.current_configs,
+        channel.exchange_declare(exchname.current_configs,
                                  exchange_type="fanout")
         try:
             while not stop:
@@ -63,7 +63,7 @@ def main():
                     "configs": list(map(lambda x: x.dict(), agentx.configs))
                 }
 
-                channel.basic_publish(exchange=exchange_name.current_configs,
+                channel.basic_publish(exchange=exchname.current_configs,
                                       routing_key="",
                                       body=json.dumps(payload))
                 payload = {
@@ -72,14 +72,14 @@ def main():
                 }
 
                 channel.basic_publish(
-                    exchange=exchange_name.current_configs_if_build,
+                    exchange=exchname.current_configs_if_build,
                     routing_key="",
                     body=json.dumps(payload))
                 time.sleep(3)
         except Exception as e:
             logging.error(traceback.format_exc())
 
-    default_thread_pool.submit(fn=send_current_configs)
+    thread_pool.submit(fn=send_current_configs)
 
     try:
         conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
@@ -89,10 +89,10 @@ def main():
         agentx_qname = f"agentx-{cfg.agentx_id}"
 
         channel.queue_declare(agentx_qname)
-        channel.exchange_declare(exchange_name.control_signal,
+        channel.exchange_declare(exchname.control_signal,
                                  exchange_type="direct")
 
-        channel.queue_bind(agentx_qname, exchange_name.control_signal,
+        channel.queue_bind(agentx_qname, exchname.control_signal,
                            cfg.agentx_id)
         channel.basic_consume(agentx_qname,
                               on_message_callback=callback,

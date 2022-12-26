@@ -4,7 +4,7 @@ import traceback
 import logging
 
 from agentx.configs import cfg
-from agentx.utils.thread import default_thread_pool
+from agentx.utils.thread import thread_pool
 
 
 def _kill_after_timeout(process: subprocess.Popen, timeout):
@@ -35,5 +35,5 @@ def run(cmd,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                text=True)
-    default_thread_pool.submit(_kill_after_timeout, process, timeout)
+    thread_pool.submit(_kill_after_timeout, process, timeout)
     return process
