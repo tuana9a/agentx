@@ -1,8 +1,9 @@
 import uuid
 import crossplane
 
+from typing import Optional, List, Any
 from agentx.models.crossplane import ParsedEntry
-from typing import Optional, List
+from agentx.models.crossplane import DirectiveEntry
 from agentx.utils.systemctl import SystemctlUtils
 from agentx.models.nginx import ReverseProxyHTTP
 from agentx.models.nginx import ReverseProxyHTTPS
@@ -54,6 +55,8 @@ class Agentx():
             directive_entry = target_blocks[i]
             if (not directive_entry):
                 return
+            if (not directive_entry.block):
+                return
             target_blocks = directive_entry.block
 
         target_blocks.append(reverse_proxy.to_directive())
@@ -87,11 +90,13 @@ class Agentx():
         if not target_config:
             return
 
-        target_blocks = target_config.parsed
+        target_blocks: List[DirectiveEntry] = target_config.parsed
 
         for i in which_block:
             directive_entry = target_blocks[i]
             if (not directive_entry):
+                return
+            if (not directive_entry.block):
                 return
             target_blocks = directive_entry.block
 
