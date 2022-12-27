@@ -1,17 +1,18 @@
 # agentx
+
 Simple Nginx Agent run jobs
 
-# how to setup (**python >= 3.8**)
+## how to setup (**python >= 3.8**)
 
-```
-mkdir /opt/agentx 
+```bash
+mkdir /opt/agentx
 ```
 
-```
+```bash
 python3 -m venv .venv
 ```
 
-```
+```bash
 source .venv/bin/activate
 ```
 
