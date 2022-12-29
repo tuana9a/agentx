@@ -8,12 +8,10 @@ parser.add_argument("which",
                     choices=["gen_config", "gen-config"],
                     type=str)
 
-config_template = """
-[default]
+config_template = """[default]
 agentx_id={id}
 nginx_config_path=/etc/nginx/nginx.conf
-transport_url=amqps://username:password@rabbitmq.example.com/vhost
-"""
+transport_url=amqps://username:password@rabbitmq.example.com/vhost"""
 
 
 def main():
