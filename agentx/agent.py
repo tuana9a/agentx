@@ -102,11 +102,8 @@ class Agentx():
 
         target_blocks.append(reverse_proxy.to_directive())
 
-    def remove_conf(self,
-                    file: str,
-                    index: int,
-                    which_block: List[int] = [],
-                    **kwargs):
+    def remove_conf(self, file: str, which_block: List[int] = [], **kwargs):
+        # deprecated
         target_config: Optional[ParsedEntry] = None
 
         for conf in self.configs:
@@ -117,22 +114,83 @@ class Agentx():
         if not target_config:
             return
 
-        target_blocks = target_config.parsed
+        target_blocks: List[DirectiveEntry] = target_config.parsed
+
+        last_index = which_block[len(which_block) - 1]
+        which_block = which_block[0:(len(which_block) - 1)]
 
         for i in which_block:
             directive_entry = target_blocks[i]
             if (not directive_entry):
                 return
+            if (not directive_entry.block):
+                return
             target_blocks = directive_entry.block
 
-        target_blocks.pop(index)
+        target_blocks.pop(last_index)
 
-    def get_current_configs_if_build(self, **kwargs):
-        return list(
-            map(lambda x: {
-                "file": x.file,
-                "build": x.build()
-            }, self.configs))
+    def remove_directive(self,
+                         file: str,
+                         which_block: List[int] = [],
+                         **kwargs):
+        target_config: Optional[ParsedEntry] = None
+
+        for conf in self.configs:
+            if conf.file == file:
+                target_config = conf
+                break
+
+        if not target_config:
+            return
+
+        target_blocks: List[DirectiveEntry] = target_config.parsed
+
+        last_index = which_block[len(which_block) - 1]
+        which_block = which_block[0:(len(which_block) - 1)]
+
+        for i in which_block:
+            directive_entry = target_blocks[i]
+            if (not directive_entry):
+                return
+            if (not directive_entry.block):
+                return
+            target_blocks = directive_entry.block
+
+        target_blocks.pop(last_index)
+
+    def update_directive(self,
+                         file: str,
+                         directive: str,
+                         args: Optional[List[str]] = [],
+                         block: Optional[List[DirectiveEntry]] = None,
+                         which_block: List[int] = [],
+                         **kwargs):
+        target_config: Optional[ParsedEntry] = None
+
+        for conf in self.configs:
+            if conf.file == file:
+                target_config = conf
+                break
+
+        if not target_config:
+            return
+
+        target_blocks: List[DirectiveEntry] = target_config.parsed
+
+        last_index = which_block[len(which_block) - 1]
+        which_block = which_block[0:(len(which_block) - 1)]
+
+        for i in which_block:
+            directive_entry = target_blocks[i]
+            if (not directive_entry):
+                return
+            if (not directive_entry.block):
+                return
+            target_blocks = directive_entry.block
+
+        target_blocks[last_index] = DirectiveEntry(directive=directive,
+                                                   args=args,
+                                                   block=block)
 
     def reload(self, **kwargs):
         # deprecated

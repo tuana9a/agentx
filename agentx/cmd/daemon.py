@@ -75,26 +75,6 @@ def main():
         except Exception as e:
             logging.error(traceback.format_exc())
 
-    def send_current_configs_if_build():
-        conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
-        channel = conn.channel()
-        channel.exchange_declare(exchname.current_configs_if_build,
-                                 exchange_type="fanout")
-        try:
-            while not stop:
-                payload = {
-                    "agentx_id": cfg.agentx_id,
-                    "configs": agentx.get_current_configs_if_build()
-                }
-
-                channel.basic_publish(
-                    exchange=exchname.current_configs_if_build,
-                    routing_key="",
-                    body=json.dumps(payload))
-                time.sleep(3)
-        except Exception as e:
-            logging.error(traceback.format_exc())
-
     def send_available_methods():
         conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
         channel = conn.channel()
@@ -115,7 +95,6 @@ def main():
             logging.error(traceback.format_exc())
 
     threading.Thread(target=send_current_configs).start()
-    threading.Thread(target=send_current_configs_if_build).start()
     threading.Thread(target=send_available_methods).start()
 
     try:
