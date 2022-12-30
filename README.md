@@ -9,6 +9,10 @@ mkdir /opt/agentx
 ```
 
 ```bash
+cd /opt/agentx
+```
+
+```bash
 python3 -m venv .venv
 ```
 
@@ -27,7 +31,7 @@ create service file `/etc/systemd/system/agentx.service`
 Description=Agentx Daemon
 
 [Service]
-ExecStart=/opt/agentx/.venv/bin/agentx --config /your/path/to/agentx.ini
+ExecStart=/opt/agentx/.venv/bin/agentx --config /opt/agentx/agentx.ini
 
 [Install]
 WantedBy=default.target
