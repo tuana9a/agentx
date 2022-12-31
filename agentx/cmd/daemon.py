@@ -61,8 +61,8 @@ def main():
         channel = conn.channel()
         channel.exchange_declare(exchname.current_configs,
                                  exchange_type="fanout")
-        try:
-            while not stop:
+        while not stop:
+            try:
                 payload = {
                     "agentx_id": cfg.agentx_id,
                     "configs": list(map(lambda x: x.dict(), agentx.configs))
@@ -72,16 +72,16 @@ def main():
                                       routing_key="",
                                       body=json.dumps(payload))
                 time.sleep(3)
-        except Exception as e:
-            logging.error(traceback.format_exc())
+            except Exception as e:
+                logging.error(traceback.format_exc())
 
     def send_available_methods():
         conn = pika.BlockingConnection(pika.URLParameters(cfg.transport_url))
         channel = conn.channel()
         channel.exchange_declare(exchname.available_methods,
                                  exchange_type="fanout")
-        try:
-            while not stop:
+        while not stop:
+            try:
                 payload = {
                     "agentx_id": cfg.agentx_id,
                     "available_methods": available_methods
@@ -91,8 +91,8 @@ def main():
                                       routing_key="",
                                       body=json.dumps(payload))
                 time.sleep(3)
-        except Exception as e:
-            logging.error(traceback.format_exc())
+            except Exception as e:
+                logging.error(traceback.format_exc())
 
     threading.Thread(target=send_current_configs).start()
     threading.Thread(target=send_available_methods).start()
