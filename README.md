@@ -4,6 +4,8 @@ Simple Nginx Agent run jobs
 
 ## how to setup (**python >= 3.8**)
 
+config example see `agentx.ini.example`
+
 ```bash
 mkdir /opt/agentx
 ```
@@ -37,4 +39,12 @@ ExecStart=/opt/agentx/.venv/bin/agentx --config /opt/agentx/agentx.ini
 WantedBy=default.target
 ```
 
-config example see `agentx.ini.example`
+```bash
+sudo systemctl daemon-reload
+```
+
+(optional)
+
+```bash
+sudo systemctl enable agentx
+```
