@@ -33,6 +33,7 @@ class Agentx():
                                which_block: List[int] = [],
                                location="/",
                                port="80",
+                               set_host_header=True,
                                **kwargs):
         reverse_proxy = ReverseProxyHTTP(id=uuid.uuid4().hex,
                                          server_name=server_name,
@@ -59,7 +60,7 @@ class Agentx():
                 return
             target_blocks = directive_entry.block
 
-        target_blocks.append(reverse_proxy.to_directive())
+        target_blocks.append(reverse_proxy.to_directive(set_host_header))
 
     def add_reverse_proxy_https(self,
                                 file: str,
@@ -70,6 +71,7 @@ class Agentx():
                                 which_block: List[int] = [],
                                 location="/",
                                 port="443",
+                                set_host_header=True,
                                 **kwargs):
         reverse_proxy = ReverseProxyHTTPS(
             id=uuid.uuid4().hex,
@@ -100,7 +102,7 @@ class Agentx():
                 return
             target_blocks = directive_entry.block
 
-        target_blocks.append(reverse_proxy.to_directive())
+        target_blocks.append(reverse_proxy.to_directive(set_host_header))
 
     def remove_conf(self, file: str, which_block: List[int] = [], **kwargs):
         # deprecated
@@ -214,3 +216,7 @@ class Agentx():
             if conf.file == file:
                 conf.save()
                 return
+
+    def save_config_then_reload_server(self, file: str, **kwargs):
+        self.save_config(file)
+        self.reload_server()
