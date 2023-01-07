@@ -10,7 +10,13 @@ from agentx.models.nginx import ReverseProxyHTTPS
 
 
 def is_managed_config(n: str):
-    return n.startswith("/etc/nginx/conf.d") or n == "/etc/nginx/nginx.conf"
+    if n.startswith("/etc/nginx/conf.d"):
+        return True
+    if n.startswith("/etc/nginx/stream.conf.d"):
+        return True
+    if n == "/etc/nginx/nginx.conf":
+        return True
+    return False
 
 
 class Agentx():
