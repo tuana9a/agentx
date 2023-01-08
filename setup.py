@@ -3,7 +3,7 @@ import setuptools
 setuptools.setup(
     name="agentx",
     packages=setuptools.find_packages(exclude=["test"]),
-    version="1.0.2",
+    version="1.0.3",
     author="Tuan Nguyen Minh",
     author_email="tuana9a@gmail.com",
     entry_points={
